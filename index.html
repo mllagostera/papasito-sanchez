@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cuenta Atrás</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Courier New', Courier, monospace;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+            user-select: none;
+            transition: background 0.8s ease, color 0.8s ease;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(circle, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0) 60%);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.8s ease;
+            z-index: 1;
+        }
+
+        body.birthday::before {
+            opacity: 1;
+        }
+
+        body.countdown {
+            background-color: #030303;
+            color: #ff4d4d;
+        }
+
+        body.birthday {
+            background: linear-gradient(135deg, #ff9ecb 0%, #ffd56e 40%, #7ee8ff 100%);
+            color: #ffffff;
+        }
+
+        body.monotone {
+            background: linear-gradient(135deg, #bfc3c7 0%, #8b9196 100%);
+            color: #202020;
+        }
+
+        #countdown-container {
+            text-align: center;
+            z-index: 10;
+            padding: 30px;
+            border-radius: 16px;
+            backdrop-filter: blur(8px);
+            transform: scale(1);
+            transition: transform 0.6s ease, opacity 0.6s ease;
+        }
+
+        body.birthday #countdown-container,
+        body.monotone #countdown-container {
+            transform: scale(1.03);
+        }
+
+        body.countdown #countdown-container {
+            background-color: rgba(8, 8, 8, 0.92);
+            border: 1px solid rgba(255, 77, 77, 0.25);
+            box-shadow: 0 0 24px rgba(255, 77, 77, 0.18);
+        }
+
+        body.birthday #countdown-container {
+            background-color: rgba(255, 255, 255, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 0 32px rgba(255, 255, 255, 0.35);
+        }
+
+        body.monotone #countdown-container {
+            background-color: rgba(255, 255, 255, 0.35);
+            border: 1px solid rgba(40, 40, 40, 0.15);
+            box-shadow: 0 0 22px rgba(40, 40, 40, 0.12);
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            opacity: 1;
+            color: #ffd6d6;
+            text-shadow: 0 0 8px rgba(255, 77, 77, 0.2);
+        }
+
+        #countdown {
+            font-size: 3.5rem;
+            font-weight: bold;
+            letter-spacing: 3px;
+            color: #ff5a5a;
+            animation: blink 1s infinite alternate;
+        }
+
+        @keyframes blink {
+            0% {
+                opacity: 1;
+                text-shadow: 0 0 16px rgba(255, 90, 90, 0.9), 0 0 28px rgba(255, 90, 90, 0.25);
+            }
+            100% {
+                opacity: 0.78;
+                text-shadow: 0 0 8px rgba(255, 90, 90, 0.45), 0 0 14px rgba(255, 90, 90, 0.15);
+            }
+        }
+
+        #background-layer {
+            position: fixed;
+            inset: 0;
+            overflow: hidden;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .background-word {
+            position: absolute;
+            color: #ffffff;
+            font-size: 2.35rem;
+            font-weight: 700;
+            letter-spacing: 0.8px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 3s ease-in-out;
+            white-space: nowrap;
+            z-index: 1;
+            text-shadow:
+                0 0 8px rgba(255, 255, 255, 0.95),
+                0 0 16px rgba(255, 255, 255, 0.55),
+                0 0 28px rgba(255, 255, 255, 0.28);
+        }
+
+        .cake {
+            font-size: 7rem;
+            margin-bottom: 1rem;
+            filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.2));
+        }
+
+        .birthday-title {
+            font-size: 2.6rem;
+            font-weight: 900;
+            letter-spacing: 0.2rem;
+            color: #ffffff;
+            text-shadow: 0 0 12px rgba(255, 255, 255, 0.4), 0 0 22px rgba(255, 107, 172, 0.3);
+            margin-bottom: 0.6rem;
+        }
+
+        .birthday-subtext {
+            font-size: 1.1rem;
+            color: #5b2f5d;
+            font-weight: 700;
+        }
+
+        .mono-message {
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: 0.08rem;
+            color: #2c2c2c;
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.2);
+            max-width: 500px;
+            line-height: 1.4;
+        }
+
+        .confetti-piece {
+            position: fixed;
+            top: -10px;
+            width: 10px;
+            height: 18px;
+            opacity: 0.95;
+            pointer-events: none;
+            z-index: 5;
+            animation: confetti-fall linear forwards;
+        }
+
+        @keyframes confetti-fall {
+            0% {
+                transform: translate3d(0, 0, 0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translate3d(var(--drift), 110vh, 0) rotate(720deg);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Capa para las palabras flotantes de fondo -->
+    <div id="background-layer"></div>
+
+    <!-- Contenedor del Reloj -->
+    <div id="countdown-container">
+        <h1>..ets molt mes vell que jo sanchez..</h1>
+        <div id="countdown">00:00:00:00</div>
+    </div>
+
+    <script>
+        const targetDate = new Date('2026-07-10T10:36:00');
+        const countdownStart = new Date(2026, 6, 8, 3, 0, 0);
+        const countdownEnd = new Date(2026, 6, 10, 10, 36, 0);
+        const birthdayStart = new Date(2026, 6, 10, 10, 36, 0);
+        const birthdayEnd = new Date(2026, 6, 11, 0, 0, 0);
+
+        const countdownContainer = document.getElementById('countdown-container');
+        const backgroundLayer = document.getElementById('background-layer');
+
+        const words = [
+            "Viejo", "Vieux", "Old", "Vecchio", "Alt", "Velho", "Star", "Gammal", "Vanha", "Oud",
+            "Старый", "Idoso", "Anciano", "Antiguo", "Carroza", "Kariano", "Senil", "Veteran",
+            "Older", "Aged", "Antico", "Stary", "Öreg", "Veci", "Senex", "Gammel", "Yari",
+            "Viejo amigo", "Madurito sexy", "Cuarentón", "Chorbo viejo", "Pureta", "Abuelo"
+        ];
+
+        function spawnWord() {
+            const wordText = words[Math.floor(Math.random() * words.length)];
+            const span = document.createElement('span');
+            span.classList.add('background-word');
+            span.innerText = wordText;
+
+            const posX = Math.random() * (window.innerWidth - 220);
+            const posY = Math.random() * (window.innerHeight - 60);
+            span.style.left = `${posX}px`;
+            span.style.top = `${posY}px`;
+
+            const maxOpacity = (Math.random() * 0.13 + 0.08).toFixed(2);
+
+            backgroundLayer.appendChild(span);
+
+            setTimeout(() => {
+                span.style.opacity = maxOpacity;
+            }, 50);
+
+            setTimeout(() => {
+                span.style.opacity = 0;
+                setTimeout(() => {
+                    span.remove();
+                }, 1800);
+            }, 3200);
+        }
+
+        function burstConfetti() {
+            const colors = ['#ff5f7e', '#ffd166', '#06d6a0', '#4cc9f0', '#9b5de5', '#ff9f1c'];
+            const pieces = 90;
+
+            for (let i = 0; i < pieces; i += 1) {
+                const piece = document.createElement('div');
+                piece.className = 'confetti-piece';
+                piece.style.left = `${Math.random() * window.innerWidth}px`;
+                piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+                piece.style.setProperty('--drift', `${(Math.random() - 0.5) * 300}px`);
+                piece.style.animationDuration = `${2.2 + Math.random() * 1.4}s`;
+                piece.style.animationDelay = `${Math.random() * 0.2}s`;
+                document.body.appendChild(piece);
+
+                setTimeout(() => piece.remove(), 3800);
+            }
+        }
+
+        function renderState() {
+            const now = new Date();
+
+            if (now >= birthdayStart && now < birthdayEnd) {
+                document.body.className = 'birthday';
+                backgroundLayer.style.display = 'none';
+                countdownContainer.innerHTML = `
+                    <div class="cake">🎂</div>
+                    <div class="birthday-title">¡¡felicitame sanchez!! :D</div>
+                    <div class="birthday-subtext">que el dia et sigui maravellos com el meu</div>
+                `;
+                if (!document.body.dataset.confettiShown) {
+                    burstConfetti();
+                    document.body.dataset.confettiShown = 'true';
+                }
+                return;
+            }
+
+            if (now >= birthdayEnd) {
+                document.body.className = 'monotone';
+                backgroundLayer.style.display = 'none';
+                countdownContainer.innerHTML = `
+                    <div class="mono-message">estem iguals, la vida no te inters</div>
+                `;
+                return;
+            }
+
+            if (now >= countdownStart && now < countdownEnd) {
+                document.body.className = 'countdown';
+                backgroundLayer.style.display = 'block';
+                delete document.body.dataset.confettiShown;
+                countdownContainer.innerHTML = `
+                    <h1>..ets molt mes vell que jo..</h1>
+                    <div id="countdown">00:00:00:00</div>
+                `;
+            } else {
+                document.body.className = 'monotone';
+                backgroundLayer.style.display = 'none';
+                countdownContainer.innerHTML = `
+                    <div class="mono-message">estem iguals, la vida no te inters</div>
+                `;
+                return;
+            }
+
+            const countdownElement = document.getElementById('countdown');
+            const difference = targetDate - now;
+
+            if (difference <= 0) {
+                countdownElement.innerHTML = '¡HA LLEGADO EL MOMENTO!';
+                countdownElement.style.animation = 'none';
+                countdownElement.style.color = '#ffffff';
+                countdownElement.style.textShadow = '0 0 20px #ff0000';
+                return;
+            }
+
+            const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+            const d = days.toString().padStart(2, '0');
+            const h = hours.toString().padStart(2, '0');
+            const m = minutes.toString().padStart(2, '0');
+            const s = seconds.toString().padStart(2, '0');
+
+            countdownElement.innerHTML = `${d}d : ${h}h : ${m}m : ${s}s`;
+        }
+
+        setInterval(renderState, 1000);
+        setInterval(() => {
+            if (document.body.classList.contains('countdown')) {
+                const activeWords = backgroundLayer.querySelectorAll('.background-word').length;
+                if (activeWords < 10) {
+                    spawnWord();
+                }
+            }
+        }, 220);
+
+        renderState();
+    </script>
+</body>
+</html>
