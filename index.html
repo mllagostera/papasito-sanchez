@@ -211,11 +211,58 @@
         const countdownContainer = document.getElementById('countdown-container');
         const backgroundLayer = document.getElementById('background-layer');
 
+        // --- DICCIONARIO SUPREMO DE LA MADUREZ ---
         const words = [
-            "Viejo", "Vieux", "Old", "Vecchio", "Alt", "Velho", "Star", "Gammal", "Vanha", "Oud",
-            "Старый", "Idoso", "Anciano", "Antiguo", "Carroza", "Kariano", "Senil", "Veteran",
-            "Older", "Aged", "Antico", "Stary", "Öreg", "Veci", "Senex", "Gammel", "Yari",
-            "Viejo amigo", "Madurito sexy", "Cuarentón", "Chorbo viejo", "Pureta", "Abuelo"
+            // --- ESPAÑOL DE ESPAÑA ---
+            "Persona mayor", "De edad avanzada", "Veterano", "Maduro", "Entrado en años", "Adulto mayor", 
+            "Anciano", "Longevo", "Cincuentón", "Cuarentón", "Camino de la jubilación",
+            "Madurito", "Viejo", "Viejales", "Viejeras", "Viejo cabrón", "Pureta", "Carroza", 
+            "Carcamal", "Vitorio", "Lagarto", "Momia", "Dinosaurio", "Fósil", "Antigualla", 
+            "Catarro", "Papi", "Viejo verde", "Abuelo", "Abuelo cebolleta", "Trasto viejo", 
+            "Mas viejo que el hilo negro", "Chorbo viejo", "Ruina", "Cascarón", "Tener más años que un bosque",
+
+            // --- EXPRESIONES PANAMEÑAS ---
+            "Pillé", "Chavorruco", "Ya bota humo", "Está bien recorrido", "Dinosaurio de patio", 
+            "Viejito", "La tara", "Ese es del año de la bomba", "Ta roco", "Rocón", "Viejo man", 
+            "Puro ancestro", "Antiguo", "Pura cédula vieja", "Full recorrido",
+
+            // --- ASIÁTICOS (Corregidos) ---
+            "老", "老年", "高龄", // Chino
+            "古い", "お爺さん", "年上", "高齢", // Japonés
+            "늙은", "나이 많은", "틀딱", // Coreano (incluye jerga coreana)
+
+            // --- IDIOMAS INVENTADOS Y CULTURA POP ---
+            "Iaur", "Brún", // Élfico Sindarin (Tolkien)
+            "Yára", "Colla", // Élfico Quenya (Tolkien)
+            "Qan", "Doyich", // Klingon (Star Trek)
+            "Wak'at", // Vulcano (Star Trek)
+            "Arakh haz", "Asavva", // Dothraki (Juego de Tronos)
+            "Liotas", "Zaldrīzes iorwun", // Alto Valyrio (Juego de Tronos)
+            "Chuba chic", "Chut chut", // Huttese (Star Wars)
+            "Zaz wawa", "Baba", // Simlish (Los Sims)
+            "01010110 01001001 01000101 01001010 01001111", // "VIEJO" en Binario
+            "56 49 45 4A 4F", // "VIEJO" en Hexadecimal
+            "...- .. . .--- ---", // "VIEJO" en Código Morse
+            "Senior Developer", "Legacy Code", "COBOL", // Humor informático / de código muerto
+
+            // --- IDIOMAS DE ESPAÑA ---
+            "Vell", "Padrí", "Zahar", "Agure", "Vello", "Avó", "Vieyu", "Viello",
+
+            // --- EUROPA Y MEDITERRÁNEO ---
+            "Old", "Aged", "Elderly", "Vieux", "Âgé", "Alt", "Greis", "Vecchio", "Anziano", "Velho", "Idoso", 
+            "Oud", "Stary", "Starý", "Star", "Gammal", "Gammel", "Vanha", "Gamall", "Öreg", "Vechi", "Bătrân", 
+            "Старый", "Старий", "Стар", "Senes", "Antiquus", "Vetus", "Palaios", "Geros", "Ena", "Hen", 
+            "Sean", "Senis", "Vecs", "Vana", "Xixu",
+
+            // --- OTROS REALES DE ASIA, ÁFRICA Y ORIENTE MEDIO ---
+            "Vriddha", "Purana", "Buda", "Tuổi già", "Kæ̀", "Tua", "Chas", "Muda", "Matanda", "Kēpu", 
+            "Paḻaiya", "Kōha", "Bura", "Kuhna", "İhtiyar", "Yaşlı", "Zaza", "Zor", "Dzveli", "Eski", "Zar",
+            "Qadim", "Musinn", "Ajuz", "Zaken", "Kashish", "Shimagile", "Tsofai", "Ogbó", "Agadi", "Mzee", 
+            "Guga", "Kulu", "Dala", "Khulu", "Antiga",
+
+            // --- AMÉRICA INDÍGENA Y OCEANÍA ---
+            "Machu", "Yuyaq", "Achachi", "Chacha", "Véjo", "Huehue", "Ilamatqui", "Noxib", "Chanko", 
+            "Wira", "Kaumātua", "Tawhito", "Ruau", "Makuahine", "Puru", "Purani"
         ];
 
         function spawnWord() {
