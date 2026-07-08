@@ -68,7 +68,9 @@
             background-color: rgba(8, 8, 8, 0.92);
             border: 1px solid rgba(255, 77, 77, 0.25);
             box-shadow: 0 0 24px rgba(255, 77, 77, 0.18);
+            animation: heartbeat-box-glow 1.4s ease-in-out infinite;
         }
+
 
         body.birthday #countdown-container {
             background-color: rgba(255, 255, 255, 0.3);
@@ -97,17 +99,21 @@
             font-weight: bold;
             letter-spacing: 3px;
             color: #ff5a5a;
-            animation: blink 1s infinite alternate;
+            animation: heartbeat-glow 1.4s ease-in-out infinite;
         }
 
-        @keyframes blink {
-            0% {
-                opacity: 1;
-                text-shadow: 0 0 16px rgba(255, 90, 90, 0.9), 0 0 28px rgba(255, 90, 90, 0.25);
+        @keyframes heartbeat-glow {
+            0%, 100% {
+                text-shadow: 0 0 12px rgba(255, 90, 90, 0.75), 0 0 20px rgba(255, 90, 90, 0.2);
             }
-            100% {
-                opacity: 0.78;
-                text-shadow: 0 0 8px rgba(255, 90, 90, 0.45), 0 0 14px rgba(255, 90, 90, 0.15);
+            25% {
+                text-shadow: 0 0 24px rgba(255, 90, 90, 1), 0 0 36px rgba(255, 90, 90, 0.35);
+            }
+            50% {
+                text-shadow: 0 0 16px rgba(255, 90, 90, 0.9), 0 0 26px rgba(255, 90, 90, 0.3);
+            }
+            75% {
+                text-shadow: 0 0 22px rgba(255, 90, 90, 0.95), 0 0 34px rgba(255, 90, 90, 0.33);
             }
         }
 
@@ -134,6 +140,32 @@
                 0 0 8px rgba(255, 255, 255, 0.95),
                 0 0 16px rgba(255, 255, 255, 0.55),
                 0 0 28px rgba(255, 255, 255, 0.28);
+        }
+
+        .leaf {
+            position: absolute;
+            width: 24px;
+            height: 18px;
+            background: linear-gradient(135deg, rgba(255, 170, 45, 0.98) 0%, rgba(210, 102, 22, 0.98) 100%);
+            border-radius: 55% 55% 30% 30%;
+            opacity: 0.96;
+            pointer-events: none;
+            filter: drop-shadow(0 3px 16px rgba(0, 0, 0, 0.25));
+            z-index: 2;
+            animation: leaf-fall linear infinite;
+        }
+
+        @keyframes leaf-fall {
+            0% {
+                top: 0;
+                transform: rotate(0deg);
+                opacity: 0.96;
+            }
+            100% {
+                top: 110vh;
+                transform: rotate(760deg);
+                opacity: 0.12;
+            }
         }
 
         .cake {
@@ -188,6 +220,24 @@
                 opacity: 0;
             }
         }
+
+        @keyframes heartbeat-box-glow {
+            0%, 100% {
+                box-shadow: 0 0 40px rgba(255, 77, 77, 0.28);
+            }
+            10% {
+                box-shadow: 0 0 90px rgba(255, 77, 77, 0.45);
+            }
+            20% {
+                box-shadow: 0 0 28px rgba(255, 77, 77, 0.20);
+            }
+            40% {
+                box-shadow: 0 0 80px rgba(255, 77, 77, 0.42);
+            }
+            60% {
+                box-shadow: 0 0 34px rgba(255, 77, 77, 0.22);
+            }
+        }
     </style>
 </head>
 <body>
@@ -215,16 +265,20 @@
         const words = [
             // --- ESPAÑOL DE ESPAÑA ---
             "Persona mayor", "De edad avanzada", "Veterano", "Maduro", "Entrado en años", "Adulto mayor", 
-            "Anciano", "Longevo", "Cincuentón", "Cuarentón", "Camino de la jubilación",
+            "Anciano", "Longevo", "¿Me llamas desde la tumba?", "Cuarentón", "Camino de la jubilación",
             "Madurito", "Viejo", "Viejales", "Viejeras", "Viejo cabrón", "Pureta", "Carroza", 
             "Carcamal", "Vitorio", "Lagarto", "Momia", "Dinosaurio", "Fósil", "Antigualla", 
-            "Catarro", "Papi", "Viejo verde", "Abuelo", "Abuelo cebolleta", "Trasto viejo", 
+            "Catarro", "Papi", "Viejo verde", "Abuelo", "Abuelo cebolleta", "Trasto viejo", "Madurito sexy",
             "Mas viejo que el hilo negro", "Chorbo viejo", "Ruina", "Cascarón", "Tener más años que un bosque",
+            "Papichulo", "Te enamoraste de Xuxa y lo sabes", "Compartes edad con Julio Iglesias", 
+            "Te acuerdas de cuando la tele era en blanco y negro", "Papuchi", "Compraste acciones de terra",
+            "Sigues con tu cuenta de hotmail",
 
             // --- EXPRESIONES PANAMEÑAS ---
             "Pillé", "Chavorruco", "Ya bota humo", "Está bien recorrido", "Dinosaurio de patio", 
             "Viejito", "La tara", "Ese es del año de la bomba", "Ta roco", "Rocón", "Viejo man", 
-            "Puro ancestro", "Antiguo", "Pura cédula vieja", "Full recorrido",
+            "Puro ancestro", "Antiguo", "Pura cédula vieja", "Full recorrido", "Papasito", 
+            "Viejo de la chingada",
 
             // --- ASIÁTICOS (Corregidos) ---
             "老", "老年", "高龄", // Chino
@@ -246,7 +300,8 @@
             "Senior Developer", "Legacy Code", "COBOL", // Humor informático / de código muerto
 
             // --- IDIOMAS DE ESPAÑA ---
-            "Vell", "Padrí", "Zahar", "Agure", "Vello", "Avó", "Vieyu", "Viello",
+            "Vell", "Padrí", "Zahar", "Agure", "Vello", "Avó", "Vieyu", "Viello", "Fullet tortuga",
+            "Vell verd",
 
             // --- EUROPA Y MEDITERRÁNEO ---
             "Old", "Aged", "Elderly", "Vieux", "Âgé", "Alt", "Greis", "Vecchio", "Anziano", "Velho", "Idoso", 
@@ -310,6 +365,33 @@
             }
         }
 
+        function spawnLeaves(count) {
+            removeLeaves();
+            for (let i = 0; i < count; i += 1) {
+                const leaf = document.createElement('div');
+                leaf.className = 'leaf';
+                const size = 18 + Math.random() * 18;
+                const left = Math.random() * 100;
+                const delay = Math.random() * 4;
+                const duration = 8 + Math.random() * 6;
+                const sway = 6 + Math.random() * 22;
+                leaf.style.width = `${size}px`;
+                leaf.style.height = `${Math.max(size * 0.75, 12)}px`;
+                leaf.style.left = `${left}vw`;
+                leaf.style.top = `${-20 - Math.random() * 40}px`;
+                leaf.style.animationDuration = `${duration}s, ${2 + Math.random() * 1.5}s`;
+                leaf.style.animationDelay = `${delay}s, ${delay}s`;
+                leaf.style.transform = `rotate(${Math.random() * 80 - 40}deg)`;
+                leaf.style.setProperty('--sway-distance', `${sway}px`);
+                leaf.style.setProperty('--start-left', `${left}vw`);
+                document.body.appendChild(leaf);
+            }
+        }
+
+        function removeLeaves() {
+            document.querySelectorAll('.leaf').forEach((leaf) => leaf.remove());
+        }
+
         function renderState() {
             const now = new Date();
 
@@ -325,15 +407,19 @@
                     burstConfetti();
                     document.body.dataset.confettiShown = 'true';
                 }
+                removeLeaves();
                 return;
             }
 
             if (now >= birthdayEnd) {
                 document.body.className = 'monotone';
-                backgroundLayer.style.display = 'none';
+                backgroundLayer.style.display = 'block';
                 countdownContainer.innerHTML = `
                     <div class="mono-message">estem iguals, la vida no te inters</div>
                 `;
+                if (!document.querySelector('.leaf')) {
+                    spawnLeaves(10);
+                }
                 return;
             }
 
@@ -345,12 +431,16 @@
                     <h1>..ets molt mes vell que jo..</h1>
                     <div id="countdown">00:00:00:00</div>
                 `;
+                removeLeaves();
             } else {
                 document.body.className = 'monotone';
-                backgroundLayer.style.display = 'none';
+                backgroundLayer.style.display = 'block';
                 countdownContainer.innerHTML = `
                     <div class="mono-message">estem iguals, la vida no te inters</div>
                 `;
+                if (!document.querySelector('.leaf')) {
+                    spawnLeaves(10);
+                }
                 return;
             }
 
@@ -382,7 +472,7 @@
         setInterval(() => {
             if (document.body.classList.contains('countdown')) {
                 const activeWords = backgroundLayer.querySelectorAll('.background-word').length;
-                if (activeWords < 10) {
+                if (activeWords < 20) {
                     spawnWord();
                 }
             }
