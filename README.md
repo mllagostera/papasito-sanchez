@@ -10,4 +10,4 @@ This project is a basic static website stored in this repository. It is intended
 
 ## Deployment
 
-The site is published using GitHub Pages, so updates in the repository are reflected in the live website automatically when deployed.
+The site is published using GitHub Pages, so updates in the repository are reflected in the live website automatically when deployed..
