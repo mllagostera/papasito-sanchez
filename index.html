@@ -9,14 +9,24 @@
             margin: 0;
             padding: 0;
             font-family: 'Courier New', Courier, monospace;
-            height: 100vh;
+            min-height: 100vh;
+            min-height: 100svh;
             display: flex;
             justify-content: center;
             align-items: center;
-            overflow: hidden;
+            overflow-x: hidden;
+            overflow-y: auto;
             position: relative;
             user-select: none;
             transition: background 0.8s ease, color 0.8s ease;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
         }
 
         body::before {
@@ -52,11 +62,14 @@
         #countdown-container {
             text-align: center;
             z-index: 10;
-            padding: 30px;
+            padding: clamp(16px, 4vw, 30px);
             border-radius: 16px;
             backdrop-filter: blur(8px);
             transform: scale(1);
             transition: transform 0.6s ease, opacity 0.6s ease;
+            width: min(100%, 640px);
+            max-width: calc(100vw - 24px);
+            box-sizing: border-box;
         }
 
         body.birthday #countdown-container,
@@ -85,21 +98,56 @@
         }
 
         h1 {
-            font-size: 1.5rem;
+            font-size: clamp(0.9rem, 3.2vw, 1.5rem);
+            line-height: 1.25;
             text-transform: uppercase;
-            letter-spacing: 2px;
+            letter-spacing: clamp(0.06rem, 1.4vw, 0.12rem);
             margin-bottom: 20px;
+            max-width: 100%;
+            overflow-wrap: anywhere;
             opacity: 1;
             color: #ffd6d6;
             text-shadow: 0 0 8px rgba(255, 77, 77, 0.2);
         }
 
         #countdown {
-            font-size: 3.5rem;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: baseline;
+            gap: clamp(0.35rem, 1.6vw, 0.8rem);
+            font-size: clamp(1.3rem, 7.5vw, 3.5rem);
             font-weight: bold;
-            letter-spacing: 3px;
+            letter-spacing: clamp(0.04rem, 0.7vw, 0.16rem);
+            line-height: 1.1;
+            max-width: 100%;
             color: #ff5a5a;
             animation: heartbeat-glow 1.4s ease-in-out infinite;
+        }
+
+        #countdown .time-block {
+            display: inline-flex;
+            align-items: baseline;
+            gap: 0.2em;
+            white-space: nowrap;
+        }
+
+        #countdown .time-value {
+            display: inline-block;
+            min-width: 1.8ch;
+            text-align: center;
+        }
+
+        #countdown .time-label {
+            font-size: 0.35em;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            opacity: 0.92;
+        }
+
+        #countdown .time-separator {
+            opacity: 0.7;
+            font-size: 0.8em;
         }
 
         @keyframes heartbeat-glow {
@@ -238,6 +286,53 @@
                 box-shadow: 0 0 34px rgba(255, 77, 77, 0.22);
             }
         }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 16px;
+                align-items: center;
+                justify-content: center;
+            }
+
+            #countdown-container {
+                margin-top: 0;
+                padding: 18px 14px;
+            }
+
+            h1 {
+                margin-bottom: 12px;
+                font-size: clamp(0.8rem, 4vw, 1rem);
+                letter-spacing: 0.05rem;
+            }
+
+            #countdown {
+                gap: 0.3rem 0.55rem;
+                font-size: clamp(1.15rem, 7vw, 2rem);
+                letter-spacing: 0.04rem;
+            }
+
+            #countdown .time-block {
+                gap: 0.16em;
+            }
+
+            #countdown .time-label {
+                font-size: 0.3em;
+                letter-spacing: 0.12em;
+            }
+
+            .cake {
+                font-size: clamp(3.2rem, 15vw, 4.8rem);
+            }
+
+            .birthday-title {
+                font-size: clamp(1.3rem, 5vw, 2rem);
+            }
+
+            .birthday-subtext,
+            .mono-message {
+                font-size: clamp(0.95rem, 3.5vw, 1.05rem);
+            }
+        }
     </style>
 </head>
 <body>
@@ -248,7 +343,15 @@
     <!-- Contenedor del Reloj -->
     <div id="countdown-container">
         <h1>..ets molt mes vell que jo sanchez..</h1>
-        <div id="countdown">00:00:00:00</div>
+        <div id="countdown">
+            <span class="time-block"><span class="time-value">00</span><span class="time-label">d</span></span>
+            <span class="time-separator">:</span>
+            <span class="time-block"><span class="time-value">00</span><span class="time-label">h</span></span>
+            <span class="time-separator">:</span>
+            <span class="time-block"><span class="time-value">00</span><span class="time-label">m</span></span>
+            <span class="time-separator">:</span>
+            <span class="time-block"><span class="time-value">00</span><span class="time-label">s</span></span>
+        </div>
     </div>
 
     <script>
@@ -465,7 +568,20 @@
             const m = minutes.toString().padStart(2, '0');
             const s = seconds.toString().padStart(2, '0');
 
-            countdownElement.innerHTML = `${d}d : ${h}h : ${m}m : ${s}s`;
+            const units = [
+                { value: d, label: 'd' },
+                { value: h, label: 'h' },
+                { value: m, label: 'm' },
+                { value: s, label: 's' }
+            ];
+
+            countdownElement.innerHTML = units.map((unit, index) => `
+                <span class="time-block">
+                    <span class="time-value">${unit.value}</span>
+                    <span class="time-label">${unit.label}</span>
+                </span>
+                ${index < units.length - 1 ? '<span class="time-separator">:</span>' : ''}
+            `).join('');
         }
 
         setInterval(renderState, 1000);
